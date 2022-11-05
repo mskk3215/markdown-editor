@@ -34,4 +34,12 @@ module.exports = {
     filename: "index.js",
     publicPath: "dist/",
   },
+  //   publicPath: ビルドしたファイルにアクセスするためのパス
+  // hot: ファイルを変更すると自動的にブラウザに反映させるフラグ
+  // open: 起動時にブラウザで開くフラグ
+  devServer: {
+    publicPath: "/dist/",
+    hot: true,
+    open: true,
+  },
 };
