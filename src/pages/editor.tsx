@@ -46,10 +46,17 @@ const Preview = styled.div`
   width: 50vw;
 `;
 
+// 永続的にデータを保存する為にlocalStorage（ページを閉じても消されない）を使う
+// localStorage でデータの参照・保存に使うキー名を決めておきます。
+// アプリケーション内で重複させないようにするため、今回は「ファイルパス:値の名前」という命名規則で決めます。
+const StorageKey = "pages/editor:text";
+
 // FCはfunction componentの型。関数コンポーネントとクラスコンポーネントがあるが、関数コンポーネントを示す
 // Editorはfunction componentであることを明示
 export const Editor: React.FC = () => {
-  const [text, setText] = useState<string>("");
+  const [text, setText] = useState<string>(
+    localStorage.getItem(StorageKey) || ""
+  );
 
   return (
     // １つの要素だけしか返却できないのでfragmentで囲う。複数のdivを返すことはできない。
@@ -58,7 +65,9 @@ export const Editor: React.FC = () => {
       <Wrapper>
         <TextArea
           onChange={(event) => {
-            setText(event.target.value);
+            const changedText = event.target.value;
+            localStorage.setItem(StorageKey, changedText); //テキストが変更されるたびに localStorage へ保存する処理を入れます。
+            setText(changedText);
           }}
           value={text}
         />
