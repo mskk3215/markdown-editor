@@ -2,7 +2,7 @@ import { useState } from "react";
 
 // init: string は初期値で、useState の引数と同じです。
 // key: string は localStorage に保存する際のキーです。
-// [string, (s: string) => void] はカスタムフックの戻り値で、useState の戻り値と同じ型になっています。
+// [string, (s: string) => void] はカスタムフックの戻り値で、useState の戻り値と同じ型になっています。返り値setValueWithStorageは引数にstring型を指定しており、返り値はない関数である。
 
 export const useStateWithStorage = (
   init: string,

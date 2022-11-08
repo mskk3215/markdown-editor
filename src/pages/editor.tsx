@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as ReactMarkdown from "react-markdown";
 
 import styled from "styled-components";
 import { useStateWithStorage } from "../hooks/use_state_with_storage";
@@ -54,6 +55,8 @@ const StorageKey = "pages/editor:text";
 
 // FCはfunction componentの型。関数コンポーネントとクラスコンポーネントがあるが、関数コンポーネントを示す
 // Editorはfunction componentであることを明示
+// StorageKeyの保存を別のコンポーネントにまとめる
+// text=value, setText=setValueWithStorage
 export const Editor: React.FC = () => {
   const [text, setText] = useStateWithStorage("", StorageKey);
 
@@ -63,10 +66,13 @@ export const Editor: React.FC = () => {
       <Header>Markdown Editor</Header>
       <Wrapper>
         <TextArea
+          //setText=setValueWithStorage
           onChange={(event) => setText(event.target.value)}
           value={text}
         />
-        <Preview>プレビューエリア</Preview>
+        <Preview>
+          <ReactMarkdown>{text}</ReactMarkdown>
+        </Preview>
       </Wrapper>
     </>
   );
