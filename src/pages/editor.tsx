@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import styled from "styled-components";
+import { useStateWithStorage } from "../hooks/use_state_with_storage";
 
 const { useState } = React;
 
@@ -54,9 +55,7 @@ const StorageKey = "pages/editor:text";
 // FCはfunction componentの型。関数コンポーネントとクラスコンポーネントがあるが、関数コンポーネントを示す
 // Editorはfunction componentであることを明示
 export const Editor: React.FC = () => {
-  const [text, setText] = useState<string>(
-    localStorage.getItem(StorageKey) || ""
-  );
+  const [text, setText] = useStateWithStorage("", StorageKey);
 
   return (
     // １つの要素だけしか返却できないのでfragmentで囲う。複数のdivを返すことはできない。
@@ -64,14 +63,9 @@ export const Editor: React.FC = () => {
       <Header>Markdown Editor</Header>
       <Wrapper>
         <TextArea
-          onChange={(event) => {
-            const changedText = event.target.value;
-            localStorage.setItem(StorageKey, changedText); //テキストが変更されるたびに localStorage へ保存する処理を入れます。
-            setText(changedText);
-          }}
+          onChange={(event) => setText(event.target.value)}
           value={text}
         />
-
         <Preview>プレビューエリア</Preview>
       </Wrapper>
     </>
