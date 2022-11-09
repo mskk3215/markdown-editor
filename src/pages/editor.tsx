@@ -2,19 +2,30 @@ import * as React from "react";
 import * as ReactMarkdown from "react-markdown";
 
 import styled from "styled-components";
+import { Button } from "../components/button";
 import { useStateWithStorage } from "../hooks/use_state_with_storage";
+import { putMemo } from "../indexeddb/memos";
 
 const { useState } = React;
 
 const Header = styled.header`
+  align-content: center;
+  display: flex;
   font-size: 1.5rem;
   height: 2rem;
+  justify-content: space-around;
   left: 0;
   line-height: 2rem;
   padding: 0.5rem 1rem;
   position: fixed;
   right: 0;
   top: 0;
+`;
+
+const HeaderControl = styled.div`
+  height: 2rem;
+  display: flex;
+  align-content: center;
 `;
 
 const Wrapper = styled.div`
@@ -60,10 +71,19 @@ const StorageKey = "pages/editor:text";
 export const Editor: React.FC = () => {
   const [text, setText] = useStateWithStorage("", StorageKey);
 
+  const saveMemo = (): void => {
+    putMemo("TITLE", text);
+  };
+
   return (
     // １つの要素だけしか返却できないのでfragmentで囲う。複数のdivを返すことはできない。
     <>
-      <Header>Markdown Editor</Header>
+      <Header>
+        Markdown Editor
+        <HeaderControl>
+          <Button onClick={saveMemo}>保存する</Button>
+        </HeaderControl>
+      </Header>
       <Wrapper>
         <TextArea
           //setText=setValueWithStorage
