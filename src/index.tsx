@@ -5,6 +5,7 @@ import { render } from "react-dom";
 import { Redirect, Route, HashRouter as Router } from "react-router-dom";
 import styled, { createGlobalStyle } from "styled-components";
 import { Editor } from "./pages/editor";
+import { History } from "./pages/history";
 
 // Main という変数に React のビューを書いています。これが JSX
 
@@ -27,7 +28,7 @@ const Main = (
         <Editor />
       </Route>
       <Route exact path="/history">
-        <h1>History</h1>
+        <History />
       </Route>
       {/* 定義されていないパスの場合は /editor にリダイレクトする、という定義 */}
       <Redirect to="/editor" path="*" />
