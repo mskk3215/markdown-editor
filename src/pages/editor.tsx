@@ -4,31 +4,12 @@ import { Link } from "react-router-dom";
 
 import styled from "styled-components";
 import { Button } from "../components/button";
+import { Header } from "../components/header";
 import { SaveModal } from "../components/save_modal";
 import { useStateWithStorage } from "../hooks/use_state_with_storage";
 import { putMemo } from "../indexeddb/memos";
 
 const { useState } = React;
-
-const Header = styled.header`
-  align-content: center;
-  display: flex;
-  font-size: 1.5rem;
-  height: 2rem;
-  justify-content: space-around;
-  left: 0;
-  line-height: 2rem;
-  padding: 0.5rem 1rem;
-  position: fixed;
-  right: 0;
-  top: 0;
-`;
-
-const HeaderControl = styled.div`
-  height: 2rem;
-  display: flex;
-  align-content: center;
-`;
 
 const Wrapper = styled.div`
   bottom: 0;
@@ -36,6 +17,13 @@ const Wrapper = styled.div`
   position: fixed;
   right: 0;
   top: 3rem;
+`;
+
+const HeaderArea = styled.div`
+  position: fixed;
+  right: 0;
+  top: 0;
+  left: 0;
 `;
 
 const TextArea = styled.textarea`
@@ -61,30 +49,28 @@ const Preview = styled.div`
   width: 50vw;
 `;
 
-// 永続的にデータを保存する為にlocalStorage（ページを閉じても消されない）を使う
-// localStorage でデータの参照・保存に使うキー名を決めておきます。
-// アプリケーション内で重複させないようにするため、今回は「ファイルパス:値の名前」という命名規則で決めます。
-const StorageKey = "pages/editor:text";
+interface Props {
+  text: string;
+  setText: (text: string) => void;
+}
 
 // FCはfunction componentの型。関数コンポーネントとクラスコンポーネントがあるが、関数コンポーネントを示す
 // Editorはfunction componentであることを明示
-// StorageKeyの保存を別のコンポーネントにまとめる
-// text=value, setText=setValueWithStorage
-export const Editor: React.FC = () => {
-  const [text, setText] = useStateWithStorage("", StorageKey);
 
+export const Editor: React.FC<Props> = (props) => {
+  const { text, setText } = props;
   const [showModal, setShowModal] = useState(false);
 
   return (
     // １つの要素だけしか返却できないのでfragmentで囲う。複数のdivを返すことはできない。
     <>
-      <Header>
-        Markdown Editor
-        <HeaderControl>
+      <HeaderArea>
+        <Header title="Markdown Editor">
           <Button onClick={() => setShowModal(true)}>保存する</Button>
-        </HeaderControl>
-        <Link to="/history">履歴を見る</Link>
-      </Header>
+          <Link to="/history">履歴を見る</Link>
+        </Header>
+      </HeaderArea>
+
       <Wrapper>
         <TextArea
           //setText=setValueWithStorage
