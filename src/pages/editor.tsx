@@ -8,8 +8,14 @@ import { Header } from "../components/header";
 import { SaveModal } from "../components/save_modal";
 import { useStateWithStorage } from "../hooks/use_state_with_storage";
 import { putMemo } from "../indexeddb/memos";
+// worker-loader!
+// src/worker/test.ts の型定義と合わせて、読み込むファイルが Worker であることを示しています。
+// こうすると worker-loader が Worker として適切に処理してくれます。
+import ConvertMarkdownWorker from "worker-loader!../worker/convert_markdown_worker";
 
-const { useState } = React;
+// const testWorker = new TestWorker();
+const convertMarkdownWorker = new ConvertMarkdownWorker();
+const { useState, useEffect } = React;
 
 const Wrapper = styled.div`
   bottom: 0;
@@ -60,6 +66,16 @@ interface Props {
 export const Editor: React.FC<Props> = (props) => {
   const { text, setText } = props;
   const [showModal, setShowModal] = useState(false);
+  const [html, setHtml] = useState("");
+
+  useEffect(() => {
+    convertMarkdownWorker.onmessage = (event) => {
+      setHtml(event.data.html);
+    };
+  }, []);
+  useEffect(() => {
+    convertMarkdownWorker.postMessage(text);
+  }, [text]);
 
   return (
     // １つの要素だけしか返却できないのでfragmentで囲う。複数のdivを返すことはできない。
@@ -78,7 +94,7 @@ export const Editor: React.FC<Props> = (props) => {
           value={text}
         />
         <Preview>
-          <ReactMarkdown>{text}</ReactMarkdown>
+          <div dangerouslySetInnerHTML={{ __html: html }} />
         </Preview>
       </Wrapper>
       {showModal && (
