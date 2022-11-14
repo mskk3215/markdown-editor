@@ -6,5 +6,27 @@
   <body>
     <div id="app"></div>
     <script src="./dist/index.js"></script>
+    <script type="text/javascript">
+      // ブラウザにサービスワーカーが実装されているかをチェック
+      if ("serviceWorker" in navigator) {
+        // ページのロードが完了した時に実行する関数を登録
+        window.addEventListener("load", () => {
+          //serviceWorkerを登録
+          // register() には、サービスワーカーのパスを渡す
+          // registration.scope はサービスワーカーのスコープ
+          navigator.serviceWorker.register("./sw.js").then(
+            (registration) => {
+              console.log(
+                "ServiceWorker registration successful with scope:",
+                registration.scope
+              );
+            },
+            (err) => {
+              console.log("ServiceWorker registration failed:", err);
+            }
+          );
+        });
+      }
+    </script>
   </body>
 </html>
